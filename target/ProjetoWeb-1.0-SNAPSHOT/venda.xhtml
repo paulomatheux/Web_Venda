@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Venda</title>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <p:growl id="msgs" showDetail="true"/>
+            <div style="display: flex">
+                <p:toolbar style="width: 100%; display: flex">
+                    <div>
+                        <p:toolbarGroup>
+                            <p:commandButton action="#{managerVenda.homePage()}" update="@form"
+                                             value="Cancelar Venda" icon="pi pi-times" styleClass="ui-button-danger" />
+                        </p:toolbarGroup>
+                    </div>
+                    <p:toolbarGroup align="right">
+                        <p:outputLabel id="labelPreco" style="padding: 5px 5px 5px 5px; background-color: #ff2f29; border-radius: 5px; color: #ffffff;
+                                       font-weight: 900" value="TOTAL: R$ #{managerVenda.precoLabel}"/>
+                    </p:toolbarGroup>
+
+                    <p:toolbarGroup id="botoes2" align="right" style="gap: 10px">
+                        <p:outputPanel id="panel-botao">
+                            <p:commandButton id="finalizar" process="@this" value="Finalizar"
+                                             oncomplete="PF('confirmaVenda-dialog').show()"
+                                             disabled="#{!managerVenda.btFinalizar}"/>
+                        </p:outputPanel>
+                    </p:toolbarGroup>
+                </p:toolbar>
+            </div>
+
+            <div>
+                <p:dialog id="confirmaVenda-dialog" header="Pesquisar Cliente" showEffect="fade" modal="true" widgetVar="confirmaVenda-dialog"
+                          responsive="true">
+                    <p:outputPanel id="confirmaVenda-content" class="ui-fluid">
+                        <p:outputPanel>
+                            <div>
+                                <p:outputLabel rendered="#{!managerVenda.formulario}" value="Informe o CPF do cliente:"/>
+                                <p:inputMask rendered="#{!managerVenda.formulario}" mask="999.999.999-99"
+                                             value="#{managerVenda.paciente.cpf}" />
+                            </div>
+                            <div style="display: flex; flex-direction: column">
+                                <p:outputLabel rendered="#{managerVenda.formulario}" value="O Cliente não está cadastrado" />
+                                <p:outputLabel rendered="#{managerVenda.formulario}" value="Deseja Cadastra-lo?"/>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <f:facet name="footer">
+                        <div>
+                            <p:commandButton rendered="#{managerVenda.formulario}" value="Sim"
+                                             immediate="true" oncomplete="PF('cliente-dialog').show()"
+                                             update=":form:confirmaVenda-dialog"/>
+                            <p:commandButton rendered="#{managerVenda.formulario}" value="Voltar"
+                                             actionListener="#{managerVenda.setFormulario(false)}"
+                                             immediate="true" oncomplete="PF('confirmaVenda-dialog').show()"
+                                             update=":form:confirmaVenda-dialog"/>
+                            
+                            <p:commandButton rendered="#{!managerVenda.formulario}" value="Confirmar"
+                                             process="@this :form:confirmaVenda-content" actionListener="#{managerVenda.finalizaVenda()}"
+                                             oncomplete="PF('confirmaVenda-dialog').hide()"
+                                             update=":form:msgs" action="#{managerVenda.homePage()}"/>
+                            <p:commandButton rendered="#{!managerVenda.formulario}" value="Voltar" 
+                                             onclick="PF('confirmaVenda-dialog').hide()" />
+                        </div>
+                    </f:facet>
+                </p:dialog>
+            </div>
+
+            <div>
+                <p:dialog id="cliente-dialog" style="border-radius: 25px" header="Cadastrar Novo Cliente"
+                          showEffect="fade" modal="true" widgetVar="cliente-dialog" responsive="true">
+                    <p:outputPanel id="cliente-content" class="ui-fluid">
+                        <p:outputPanel>
+                            <div class="field">
+                                <p:outputLabel value="Nome"/>
+                                <p:inputText value="#{managerPaciente.paciente.nome}"/>
+
+                                <p:outputLabel value="CPF"/>
+                                <p:inputMask value="#{managerPaciente.paciente.cpf}" mask="999.999.999-99" />
+
+                                <p:outputLabel value="Telefone"/>
+                                <p:inputMask value="#{managerPaciente.paciente.telefone}" mask="(99)9 9999-9999" />
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <f:facet id="facet" name="footer">
+                        <div id="campos" style="display: flex; gap: 10px">
+                            <p:commandButton value="Salvar" id="btSalvar" icon="pi pi-plus-circle" style="color: white; size: 30px" 
+                                             styleClass="ui-button-success" process="@this :form:cliente-content"
+                                             update=":form:msgs :form:cliente-content" oncomplete="PF('cliente-dialog').hide()"
+                                             actionListener="#{managerPaciente.salvarPaciente()}"/>
+
+                            <p:commandButton value="Voltar" id="btVoltar" icon="pi pi-times"
+                                             styleClass="ui-button-sucess" process="@this" update=":form:cliente-dialog :form:confirmaVenda-dialog"
+                                             immediate="true" actionListener="#{managerVenda.setFormulario(false)}"
+                                             oncomplete="PF('confirmaVenda-dialog').show()"/>
+                        </div>
+                    </f:facet>
+                </p:dialog>
+            </div>
+
+            <p:divider></p:divider>
+
+            <div class="card" style="display: flex; gap: 10px">
+                <div style="width: 60%">
+                    <p:dataTable  style="border: 1px solid gray" rowKey="#{produto.id}" id="productTable" value="#{managerVenda.produtosEstoque}" var="produto"
+                                  rows="5" paginator="true" paginatorPosition="both" currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} itens"
+                                  paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                  rowsPerPageTemplate="5,10,{ShowAll|'Tudo'}">
+
+                        <p:ajax event="rowEdit" listener="#{managerProduto.onRowEdit}" update=":form:msgs"/>
+                        <p:ajax event="rowEditCancel" listener="#{managerProduto.onRowCancel}" update=":form:msgs"/>
+
+                        <p:column width="30%" headerText="Nome">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{produto.nome}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="modelInputNome" value="#{produto.nome}" style="width: 100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column width="20%" headerText="Lote">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{produto.lote}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="modelInputLote" value="#{produto.lote}" style="width: 100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column width="15%" headerText="Quantidade">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{produto.quantidade} UN"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="modelInputQuantidade" value="#{produto.quantidade}" style="width: 100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column width="20%" headerText="Preço">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="R$ #{produto.preco}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="modelInputPreco" value="#{produto.preco}" style="width: 100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column width="15%" headerText="Validade">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{produto.validade}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="modelInputValidade" value="#{produto.validade}" style="width: 100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column width="6%">
+                            <p:commandButton icon="pi pi-plus-circle" styleClass="ui-button-success" oncomplete="PF('quantidadeDialog').show()"
+                                             process="@this" actionListener="#{managerVenda.setProduto(produto)}">
+                                <p:ajax update=":form:quantidadeDialog" resetValues="true" process="@this" />
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+
+                <p:dialog style="border-radius: 15px" id="quantidadeDialog" showEffect="fade" modal="true"
+                          widgetVar="quantidadeDialog" responsive="true">
+                    <p:outputPanel id="quantidade-content" class="ui-fluid">
+                        <p:outputPanel>
+                            <div class="field" style="display: flex; flex-direction: column; gap: 10px">
+                                <p:outputLabel for="quantity">Quantidade</p:outputLabel>
+                                <p:spinner required="true" id="quantity" thousandSeparator="." value="#{managerVenda.quantidade}" />
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+                    <f:facet name="footer">
+                        <div style="display: flex; justify-content: space-evenly">
+                            <p:commandButton value="Confirmar" process="@this :form:quantity" actionListener="#{managerVenda.adicionaProduto()}"
+                                             update=":form:panel-botao :form:productBagTable :form:productTable :form:labelPreco :form:msgs" oncomplete="PF('quantidadeDialog').hide()"/>
+                            <p:commandButton value="Cancelar" process="@this" onclick="PF('quantidadeDialog').hide()" />
+                        </div>
+                    </f:facet>
+                </p:dialog>
+
+                <div style="width: 40%; border: 1px solid gray">
+                    <p:dataTable rowKey="#{produtoBag.id}" id="productBagTable" value="#{managerVenda.produtosVenda}" var="produtoBag"
+                                 rows="5" paginator="true"  paginatorPosition="both" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                 rowsPerPageTemplate="5,10,{ShowAll|'Tudo'}">
+                        <p:column headerText="Nome">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{produtoBag.nome}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="modelInputNome" value="#{produtoBag.nome}" style="width: 100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column headerText="Quantidade">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{produtoBag.quantidade}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="modelInputQuantidade" value="#{produtoBag.quantidade}" style="width: 100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+
+                        <p:column headerText="Preço">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="R$ #{produtoBag.preco}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="modelInputPreco" value="#{produtoBag.preco}" style="width: 100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </h:form>
+    </h:body>
+</html>

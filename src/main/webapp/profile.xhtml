@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Perfil</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <h:form id="form">
+            <p:growl id="msgs" showDetail="true"/>
+
+            <div id="toolbar" style="display: flex">
+                <p:toolbar style="width: 100%">
+                    <p:toolbarGroup style="gap: 10px">
+                        <p:commandButton update="@form" action="#{managerVenda.homePage()}" icon="pi pi-home"
+                                         styleClass="mr-2" />
+                    </p:toolbarGroup>
+                    <p:toolbarGroup align="right" style="gap: 10px">
+
+                    </p:toolbarGroup>
+                </p:toolbar>
+            </div>
+
+            <div style="display: flex; justify-content: center">
+                <p:panelGrid style="width: 100%" columns="1">
+                    <p:outputPanel style="display: flex">
+                        <div style="width: 70%; display: flex;flex-direction: column; padding-left: 15%; margin-right: 1%">
+                            <p:outputLabel value="Nome: "/>
+                            <p:inputText />
+                        </div>
+                        <div style="width: 10%; display: flex;flex-direction: column">
+                            <p:outputLabel value="Sexo"/>
+                            <p:selectOneMenu value="#{managerPaciente.paciente.sexo}">
+                                <f:selectItem itemLabel="Homem" itemValue="Homem" />
+                                <f:selectItem itemLabel="Mulher" itemValue="Mulher" />
+                                <f:selectItem itemLabel="Outro" itemValue="Outro" />
+                            </p:selectOneMenu>
+                        </div>
+                    </p:outputPanel>
+
+                    <p:outputPanel style="display: flex">
+                        <div style="width: 70%; display: flex;flex-direction: column; padding-left: 15%; margin-right: 1%">
+                            <p:outputLabel value="Endereço: "/>
+                            <p:inputText />
+                        </div>
+                        <div style="width: 10%; display: flex;flex-direction: column">
+                            <p:outputLabel value="Número: " />
+                            <p:inputText />
+                        </div>
+                    </p:outputPanel>
+
+                    <p:outputPanel style="display: flex" >
+                        <div style="display: flex;flex-direction: column; padding-left: 15%">
+                            <p:outputLabel value="Telefone:" />
+                            <p:inputMask style="width: 100%" mask="(99) 9 9999-9999" />
+                            <p:commandButton style="border-radius: 20px; margin-top: 10%; width: 50%" icon="pi pi-save" value="Salvar"/>
+                        </div>
+                        <div style="display: flex;flex-direction: column; padding-left: 5%">
+                            <p:outputLabel value="CPF: " />
+                            <p:inputMask style="width: 100%" mask="999.999.999-99"/>
+                        </div>
+                        <div style="width: 20% ; display: flex;flex-direction: column; padding-left: 5%">
+                            <p:outputLabel value="Email: " />
+                            <p:inputText style="width: 100%"/>
+                        </div>
+                    </p:outputPanel>
+                </p:panelGrid>
+            </div>
+        </h:form>
+    </h:body>
+</html>
