@@ -11,15 +11,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
     <h:head>
         <title>Venda</title>
     </h:head>
-    <h:body>
+    <h:body  style="background-color: #000d16">
         <h:form id="form">
             <p:growl id="msgs" showDetail="true"/>
             <div style="display: flex">
-                <p:toolbar style="width: 100%; display: flex">
+                <p:toolbar style="width: 100%; display: flex; background: rgba(255, 255, 255, 0.29);
+                           border-radius: 16px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); backdrop-filter: blur(6.2px);
+                           -webkit-backdrop-filter: blur(6.2px); border: 0px">
                     <div>
                         <p:toolbarGroup>
-                            <p:commandButton action="#{managerVenda.homePage()}" update="@form"
-                                             value="Cancelar Venda" icon="pi pi-times" styleClass="ui-button-danger" />
+                            <p:commandButton style="border-radius: 50%" action="#{managerVenda.homePage()}" update="@form"
+                                             icon="pi pi-times" styleClass="ui-button-danger" />
                         </p:toolbarGroup>
                     </div>
                     <p:toolbarGroup align="right">
@@ -29,7 +31,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
                     <p:toolbarGroup id="botoes2" align="right" style="gap: 10px">
                         <p:outputPanel id="panel-botao">
-                            <p:commandButton id="finalizar" process="@this" value="Finalizar"
+                            <p:commandButton style="border-radius: 16px" id="finalizar" process="@this" value="Finalizar"
                                              oncomplete="PF('confirmaVenda-dialog').show()"
                                              disabled="#{!managerVenda.btFinalizar}"/>
                         </p:outputPanel>
@@ -107,11 +109,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 </p:dialog>
             </div>
 
-            <p:divider></p:divider>
-
-            <div class="card" style="display: flex; gap: 10px">
-                <div style="width: 60%">
-                    <p:dataTable  style="border: 1px solid gray" rowKey="#{produto.id}" id="productTable" value="#{managerVenda.produtosEstoque}" var="produto"
+            
+            <div class="card" style="margin-top: 15px; display: flex; gap: 10px">
+                <div style="width: 60%; background-color: #ffffff; padding: 10px 10px 10px 10px;
+                     border-radius: 16px">
+                    <p:dataTable rowKey="#{produto.id}" id="productTable" value="#{managerVenda.produtosEstoque}" var="produto"
                                   rows="5" paginator="true" paginatorPosition="both" currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} itens"
                                   paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                   rowsPerPageTemplate="5,10,{ShowAll|'Tudo'}">
@@ -175,7 +177,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                         </p:column>
 
                         <p:column width="6%">
-                            <p:commandButton icon="pi pi-plus-circle" styleClass="ui-button-success" oncomplete="PF('quantidadeDialog').show()"
+                            <p:commandButton style="border-radius: 50%" icon="pi pi-plus-circle" styleClass="ui-button-success" oncomplete="PF('quantidadeDialog').show()"
                                              process="@this" actionListener="#{managerVenda.setProduto(produto)}">
                                 <p:ajax update=":form:quantidadeDialog" resetValues="true" process="@this" />
                             </p:commandButton>
@@ -202,7 +204,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                     </f:facet>
                 </p:dialog>
 
-                <div style="width: 40%; border: 1px solid gray">
+                <div style="width: 40%; border: 1px solid gray; background-color: #ffffff; padding: 10px 10px 10px 10px;
+                     border-radius: 16px">
                     <p:dataTable rowKey="#{produtoBag.id}" id="productBagTable" value="#{managerVenda.produtosVenda}" var="produtoBag"
                                  rows="5" paginator="true"  paginatorPosition="both" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                  currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"

@@ -15,14 +15,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         <h:form id="form">
             <p:growl id="msgs" showDetail="true"/>
             <div id="toolbar" style="display: flex">
-                <p:toolbar style="width: 100%">
+                <p:toolbar style="width: 100%; background: rgba(255, 255, 255, 0.29);
+                           border-radius: 16px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); backdrop-filter: blur(6.2px);
+                           -webkit-backdrop-filter: blur(6.2px); border: 0px">
                     <p:toolbarGroup style="gap: 10px">
-                        <p:commandButton update="@form" action="#{managerVenda.homePage()}" icon="pi pi-home"
+                        <p:commandButton style="border-radius: 50%" update="@form" action="#{managerVenda.homePage()}" icon="pi pi-home"
                                          styleClass="mr-2" />
                     </p:toolbarGroup>
+                    <p:toolbarGroup align="center">
+                        <p:outputLabel style="color: #ffffff; font-size: 20px; font-weight: 600" value="ProjetoWeb" />
+                    </p:toolbarGroup>
                     <p:toolbarGroup align="right" style="gap: 10px">
-
-
                         <p:menuButton buttonStyle="border-radius: 50%" icon="pi pi-user">
                             <p:menuitem value="Perfil" url="http://localhost:8080/ProjetoWeb/profile.xhtml"/>
                             <p:menuitem value="Sair"/>
@@ -96,103 +99,108 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                 </f:facet>
             </p:dialog>
 
-            <div id="dataTable" style="display: flex; margin-top: 15px">
-                <p:dataTable style="width: 100%" rowKey="#{produto.id}" id="productTable" value="#{managerProduto.produtos}" var="produto" editable="true"
-                             paginator="true" rows="5" paginatorPosition="both" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                             currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
-                             rowsPerPageTemplate="5,10,{ShowAll|'All'}">
+            <div id="dataTable" style="display: flex; margin-top: 15px; border-radius: 15px; gap: 15px">
+                <div style="width: 85%; padding: 10px 10px 10px 10px; border-radius: 16px; background-color: #ffffff">
+                    <p:dataTable rowKey="#{produto.id}" id="productTable" value="#{managerProduto.produtos}" var="produto" editable="true"
+                                 paginator="true" rows="5" paginatorPosition="both" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
+                                 rowsPerPageTemplate="5,10,{ShowAll|'All'}">
 
-                    <p:ajax event="rowEdit" listener="#{managerProduto.onRowEdit}" update=":form:msgs"/>
-                    <p:ajax event="rowEditCancel" listener="#{managerProduto.onRowCancel}" update=":form:msgs"/>
+                        <p:ajax event="rowEdit" listener="#{managerProduto.onRowEdit}" update=":form:msgs"/>
+                        <p:ajax event="rowEditCancel" listener="#{managerProduto.onRowCancel}" update=":form:msgs"/>
 
-                    <p:column headerText="Nome">
-                        <p:cellEditor>
-                            <f:facet name="output">
-                                <h:outputText value="#{produto.nome}"/>
-                            </f:facet>
-                            <f:facet name="input">
-                                <p:inputText id="modelInputNome" value="#{produto.nome}" style="width: 100%"/>
-                            </f:facet>
-                        </p:cellEditor>
-                    </p:column>
+                        <p:column width="35%" headerText="Nome">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{produto.nome}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="modelInputNome" value="#{produto.nome}" style="width: 100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
 
-                    <p:column headerText="Lote">
-                        <p:cellEditor>
-                            <f:facet name="output">
-                                <h:outputText value="#{produto.lote}"/>
-                            </f:facet>
-                            <f:facet name="input">
-                                <p:inputText id="modelInputLote" value="#{produto.lote}" style="width: 100%"/>
-                            </f:facet>
-                        </p:cellEditor>
-                    </p:column>
+                        <p:column width="5%" headerText="Lote">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{produto.lote}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="modelInputLote" value="#{produto.lote}" style="width: 100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
 
-                    <p:column headerText="Quantidade">
-                        <p:cellEditor>
-                            <f:facet name="output">
-                                <h:outputText value="#{produto.quantidade}"/>
-                            </f:facet>
-                            <f:facet name="input">
-                                <p:inputText id="modelInputQuantidade" value="#{produto.quantidade}" style="width: 100%"/>
-                            </f:facet>
-                        </p:cellEditor>
-                    </p:column>
+                        <p:column headerText="Quantidade">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{produto.quantidade} UN"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="modelInputQuantidade" value="#{produto.quantidade}" style="width: 100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
 
-                    <p:column headerText="Preço">
-                        <p:cellEditor>
-                            <f:facet name="output">
-                                <h:outputText value="#{produto.preco}"/>
-                            </f:facet>
-                            <f:facet name="input">
-                                <p:inputText id="modelInputPreco" value="#{produto.preco}" style="width: 100%"/>
-                            </f:facet>
-                        </p:cellEditor>
-                    </p:column>
+                        <p:column headerText="Preço">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="R$ #{produto.preco}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="modelInputPreco" value="#{produto.preco}" style="width: 100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
 
-                    <p:column headerText="Validade">
-                        <p:cellEditor>
-                            <f:facet name="output">
-                                <h:outputText value="#{produto.validade}"/>
-                            </f:facet>
-                            <f:facet name="input">
-                                <p:inputText id="modelInputValidade" value="#{produto.validade}" style="width: 100%"/>
-                            </f:facet>
-                        </p:cellEditor>
-                    </p:column>
+                        <p:column headerText="Validade">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{produto.validade}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText id="modelInputValidade" value="#{produto.validade}" style="width: 100%"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
 
-                    <p:column width="2%">
-                        <p:rowEditor editTitle="Editar Produto" cancelTitle="Cancelar Edição" saveTitle="Salvar Edição"/>
-                    </p:column>
+                        <p:column width="3%">
+                            <p:rowEditor editTitle="Editar Produto" cancelTitle="Cancelar Edição" saveTitle="Salvar Edição"/>
+                        </p:column>
 
-                    <p:column width="2%">
-                        <p:commandButton id="salvarProduto" icon="pi pi-save" title="View" actionListener="#{managerProduto.editarProduto(produto)}" process="@this" update="productTable"
-                                         disabled="#{!managerProduto.editado}">
-                            <f:setPropertyActionListener value="#{produto}" target="#{managerProduto.produtoSelecionado}"/>
-                        </p:commandButton>
-                    </p:column>
+                        <p:column width="3%">
+                            <p:commandButton style="border-radius: 50%" id="salvarProduto" icon="pi pi-save" title="View" actionListener="#{managerProduto.editarProduto(produto)}" process="@this" update="productTable"
+                                             disabled="#{!managerProduto.editado}">
+                                <f:setPropertyActionListener value="#{produto}" target="#{managerProduto.produtoSelecionado}"/>
+                            </p:commandButton>
+                        </p:column>
 
-                    <p:column width="6%">
-                        <p:commandButton icon="pi pi-trash" styleClass="ui-button-danger"
-                                         oncomplete="PF('deleteProductDialog').show()">
-                            <f:setPropertyActionListener value="#{produto}" target="#{managerProduto.produtoSelecionado}"/>
-                        </p:commandButton>
-                    </p:column>
-                </p:dataTable>
-                <p:card id="card" style="width: 300px; margin-left: 15px">
+                        <p:column width="3%">
+                            <p:commandButton style="border-radius: 50%" icon="pi pi-trash" styleClass="ui-button-danger"
+                                             oncomplete="PF('deleteProductDialog').show()">
+                                <f:setPropertyActionListener value="#{produto}" target="#{managerProduto.produtoSelecionado}"/>
+                            </p:commandButton>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+                
+                <p:card id="card" style="width: 300px; background: rgba(255, 255, 255, 0.29);
+                        border-radius: 16px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); backdrop-filter: blur(6.2px);
+                        -webkit-backdrop-filter: blur(6.2px)">
                     <div style="display: flex; flex-direction: column">
                         <div style="width: 100%">
-                            <p:commandButton style="width: 100%" value="Abrir Venda" update="@form" icon="pi pi-file"
+                            <p:commandButton style="width: 100%; border-radius: 160px" value="Abrir Venda" update="@form" icon="pi pi-file"
                                              action="#{managerProduto.abrirVenda()}" />
                         </div>
                         <div style="margin-top: 5px">
-                            <p:commandButton style="width: 100%" value="Novo Produto" oncomplete="PF('manageProductDialog').show()"
+                            <p:commandButton style="width: 100%; border-radius: 160px" value="Novo Produto" oncomplete="PF('manageProductDialog').show()"
                                              icon="pi pi-plus-circle" styleClass="ui-button-success"
                                              actionListener="#{managerProduto.novoProduto()}">
                                 <p:ajax update=":formsecundario:manageProductDialog" resetValues="true" />
                             </p:commandButton>
                         </div>
                         <div style="margin-top: 5px">
-                            <p:commandButton style="width: 100%" value="Historico de Venda" icon="pi pi-replay"
+                            <p:commandButton style="width: 100%; border-radius: 160px" value="Historico de Venda" icon="pi pi-replay"
                                              styleClass="mr-2" action="#{managerHistorico.historico()}" />
                         </div>
                     </div>
