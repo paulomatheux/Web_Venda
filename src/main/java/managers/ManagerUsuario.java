@@ -30,7 +30,7 @@ public class ManagerUsuario implements Serializable {
     private Usuario usuario;
     private boolean exibirFormulario = false;
     private List<Usuario> usuarios;
-
+    
     @PostConstruct
     public void init() {
         usuario = new Usuario();
@@ -39,16 +39,6 @@ public class ManagerUsuario implements Serializable {
 
     public void populaTabela() {
         usuarios = servico.findAll();
-    }
-
-    public void onRowEdit(RowEditEvent<Usuario> event) {
-        FacesMessage msg = new FacesMessage("Product Edited", String.valueOf(event.getObject().getNome()));
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-    }
-
-    public void onRowCancel(RowEditEvent<Usuario> event) {
-        FacesMessage msg = new FacesMessage("Edit Cancelled", String.valueOf(event.getObject().getNome()));
-        FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
     public void salvarUsuario() {

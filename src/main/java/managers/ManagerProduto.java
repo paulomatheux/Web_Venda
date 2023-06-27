@@ -79,7 +79,6 @@ public class ManagerProduto implements Serializable {
     }
     
     public String abrirVenda(){
-        System.out.println("xd");
         return "venda?faces-redirect=true";
     }
 

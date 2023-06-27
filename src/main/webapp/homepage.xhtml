@@ -38,7 +38,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                                         update=":form:msgs :form:cadastrar-cliente-dialog" 
                                         immediate="true" icon="pi pi-user-plus" styleClass="mr-2"/>
                         </p:menuButton>
-
                     </p:toolbarGroup>
                 </p:toolbar>
             </div>
@@ -102,9 +101,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             <div id="dataTable" style="display: flex; margin-top: 15px; border-radius: 15px; gap: 15px">
                 <div style="width: 85%; padding: 10px 10px 10px 10px; border-radius: 16px; background-color: #ffffff">
                     <p:dataTable rowKey="#{produto.id}" id="productTable" value="#{managerProduto.produtos}" var="produto" editable="true"
-                                 paginator="true" rows="5" paginatorPosition="both" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 paginator="true" rows="5" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                  currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
                                  rowsPerPageTemplate="5,10,{ShowAll|'All'}">
+
+                        <f:facet name="header">
+                            <div style="display: flex; justify-content: space-between; align-items: center" >
+                                <p:outputLabel value="Estoque" />
+                                <p:commandButton style="border-radius: 50%" oncomplete="PF('manageProductDialog').show()"
+                                                 icon="pi pi-plus-circle" styleClass="ui-button-success"
+                                                 actionListener="#{managerProduto.novoProduto()}">
+                                    <p:ajax update=":formsecundario:manageProductDialog" resetValues="true" />
+                                </p:commandButton>
+                            </div>
+                        </f:facet>
 
                         <p:ajax event="rowEdit" listener="#{managerProduto.onRowEdit}" update=":form:msgs"/>
                         <p:ajax event="rowEditCancel" listener="#{managerProduto.onRowCancel}" update=":form:msgs"/>
@@ -183,7 +193,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                         </p:column>
                     </p:dataTable>
                 </div>
-                
+
                 <p:card id="card" style="width: 300px; background: rgba(255, 255, 255, 0.29);
                         border-radius: 16px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); backdrop-filter: blur(6.2px);
                         -webkit-backdrop-filter: blur(6.2px)">
@@ -191,13 +201,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                         <div style="width: 100%">
                             <p:commandButton style="width: 100%; border-radius: 160px" value="Abrir Venda" update="@form" icon="pi pi-file"
                                              action="#{managerProduto.abrirVenda()}" />
-                        </div>
-                        <div style="margin-top: 5px">
-                            <p:commandButton style="width: 100%; border-radius: 160px" value="Novo Produto" oncomplete="PF('manageProductDialog').show()"
-                                             icon="pi pi-plus-circle" styleClass="ui-button-success"
-                                             actionListener="#{managerProduto.novoProduto()}">
-                                <p:ajax update=":formsecundario:manageProductDialog" resetValues="true" />
-                            </p:commandButton>
                         </div>
                         <div style="margin-top: 5px">
                             <p:commandButton style="width: 100%; border-radius: 160px" value="Historico de Venda" icon="pi pi-replay"
@@ -228,7 +231,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                     </div>
                 </f:facet>
             </p:dialog>
-
         </h:form>
 
         <h:form id="formsecundario">

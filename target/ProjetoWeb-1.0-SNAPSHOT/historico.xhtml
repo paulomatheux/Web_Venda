@@ -12,69 +12,67 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         <title>Histórico</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </h:head>
-    <h:body>
+    <h:body style="background-color: #000d16">
         <h:form id="form">
             <p:growl id="msgs" showDetail="true"/>
             <div style="display: flex">
-                <p:toolbar style="width: 100%; display: flex">
+                <p:toolbar style="width: 100%; background: rgba(255, 255, 255, 0.29);
+                           border-radius: 16px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); backdrop-filter: blur(6.2px);
+                           -webkit-backdrop-filter: blur(6.2px); border: 0px">
                     <div>
                         <p:toolbarGroup>
-                            <p:commandButton update="@form" action="#{managerVenda.homePage()}" icon="pi pi-home"
+                            <p:commandButton style="border-radius: 50%" update="@form" action="#{managerVenda.homePage()}" icon="pi pi-home"
                                              styleClass="mr-2" />
                         </p:toolbarGroup>
                     </div>
 
                     <p:toolbarGroup id="botoes2" align="right" style="gap: 10px">
                         <p:outputPanel id="panel-botao">
-                            <p:commandButton id="finalizar" process="@this" icon="pi pi-file-pdf"
+                            <p:commandButton style="border-radius: 50%" id="createPdf" process="@this" icon="pi pi-file-pdf"
                                              actionListener="#{managerVenda.finalizaVenda()}"/>
                         </p:outputPanel>
                     </p:toolbarGroup>
                 </p:toolbar>
             </div>
-            <p:divider></p:divider>
 
-            <p:dataTable style="border: 1px solid gray" rowKey="#{venda.id}" id="productTable" value="#{managerHistorico.vendas}" var="venda"
-                         rows="5" paginator="true" paginatorPosition="both" currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} itens"
-                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                         rowsPerPageTemplate="5,10,{ShowAll|'Tudo'}">
+            <div style="margin-top: 15px; padding: 10px 10px 10px 10px; background-color: #ffffff; border-radius: 16px">
+                <p:dataTable style="border: 0px solid #fff" rowKey="#{venda.id}" id="productTable" value="#{managerHistorico.vendas}" var="venda"
+                             rows="5" paginator="true" paginatorPosition="both" currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} itens"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,{ShowAll|'Tudo'}">
 
-                <p:ajax event="rowEdit" listener="#{managerProduto.onRowEdit}" update=":form:msgs"/>
-                <p:ajax event="rowEditCancel" listener="#{managerProduto.onRowCancel}" update=":form:msgs"/>
+                    <p:ajax event="rowEdit" listener="#{managerProduto.onRowEdit}" update=":form:msgs"/>
+                    <p:ajax event="rowEditCancel" listener="#{managerProduto.onRowCancel}" update=":form:msgs"/>
 
-                <p:column width="30%" headerText="Data">
-                    <p:cellEditor>
-                        <f:facet name="output">
-                            <h:outputText value="#{venda.data}"/>
-                        </f:facet>
-                        <f:facet name="input">
-                            <p:inputText id="modelInputNome" value="#{venda.data}" style="width: 100%"/>
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column>
+                    <p:column width="30%" headerText="Data">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{venda.data}"/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputText id="modelInputNome" value="#{venda.data}" style="width: 100%"/>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
 
-                <p:column width="15%" headerText="Responsável">
-                    <p:cellEditor>
-                        <f:facet name="output">
-                            <h:outputText value="#{venda.responsavel}"/>
-                        </f:facet>
-                        <f:facet name="input">
-                            <p:inputText id="modelInputQuantidade" value="#{venda.responsavel}" style="width: 100%"/>
-                        </f:facet>
-                    </p:cellEditor>
-                </p:column>
+                    <p:column width="15%" headerText="Responsável">
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{venda.responsavel}"/>
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputText id="modelInputQuantidade" value="#{venda.responsavel}" style="width: 100%"/>
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
 
-                <p:column width="6%">
-                    <p:commandButton icon="pi pi-search-plus" styleClass="ui-button-success"
-                                     process="@this" actionListener="#{managerHistorico.pesquisaVenda(venda)}"
-                                     oncomplete="PF('historico-dialog').show()" update=":form:historico-dialog" />
-                </p:column>
-
-                <p:column width="6%">
-                    <p:commandButton id="finalizar" process="@this" icon="pi pi-file-pdf"/>
-                </p:column>
-            </p:dataTable>
-
+                    <p:column width="6%">
+                        <p:commandButton style="border-radius: 50%" icon="pi pi-search-plus" styleClass="ui-button-success"
+                                         process="@this" actionListener="#{managerHistorico.pesquisaVenda(venda)}"
+                                         oncomplete="PF('historico-dialog').show()" update=":form:historico-dialog" />
+                    </p:column>
+                </p:dataTable>
+            </div>
             <div>
                 <p:dialog width="800px" id="historico-dialog" showEffect="fade" modal="true" widgetVar="historico-dialog" responsive="true">
                     <p:outputPanel id="historico-content" class="ui-fluid">
@@ -134,15 +132,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                                         </f:facet>
                                     </p:cellEditor>
                                 </p:column>
-                                <f:facet name="footer">
-                                    <div style="display: flex; justify-content: center">
-                                        <p:commandButton style="width: 120px" value="Fechar" process="@this" actionListener="#{managerHistorico.init()}"
-                                                         oncomplete="PF('historico-dialog').hide()"/>
-                                    </div>
-                                </f:facet>
                             </p:dataTable>
                         </p:outputPanel>
                     </p:outputPanel>
+                    <f:facet name="footer">
+                        <div style="display: flex; justify-content: center; justify-content: center">
+                            <p:commandButton value="Imprimir" style="width: 120px; border-radius: 16px" id="finalizar" process="@this" icon="pi pi-file-pdf">
+                                 <p:dataExporter type="pdf" target="productTable" fileName="visible" visibleOnly="true"/>
+                            </p:commandButton>
+                            <p:commandButton style="width: 120px; border-radius: 16px" value="Fechar" process="@this" actionListener="#{managerHistorico.init()}"
+                                             oncomplete="PF('historico-dialog').hide()"/>
+                        </div>
+                    </f:facet>
                 </p:dialog>
             </div>
         </h:form>

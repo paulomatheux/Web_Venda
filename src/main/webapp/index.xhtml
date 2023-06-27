@@ -29,8 +29,8 @@
 
                             <div style="display: flex; justify-content: center; gap: 10px; margin-top: 15px">
                                 <p:commandButton value="Salvar" update="@form"  process="@form"
-                                                  rendered="#{managerUsuario.exibirFormulario}"
-                                                  actionListener="#{managerUsuario.salvarUsuario()}" />
+                                                 rendered="#{managerUsuario.exibirFormulario}"
+                                                 actionListener="#{managerUsuario.salvarUsuario()}" />
 
                                 <p:commandButton value="Entrar" update="card growl"
                                                  rendered="#{!managerUsuario.exibirFormulario}"
