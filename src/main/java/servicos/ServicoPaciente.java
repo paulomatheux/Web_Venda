@@ -31,7 +31,7 @@ public class ServicoPaciente extends ServicoGenerico<Paciente> {
             return null;
         }
     }
-
+    
     public void deletarPaciente(Paciente paciente) {
         Object id = paciente.getId();
         Paciente pac = getEm().getReference(Paciente.class, id);

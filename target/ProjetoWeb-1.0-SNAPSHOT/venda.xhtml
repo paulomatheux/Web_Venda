@@ -20,20 +20,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                            -webkit-backdrop-filter: blur(6.2px); border: 0px">
                     <div>
                         <p:toolbarGroup>
-                            <p:commandButton style="border-radius: 50%" action="#{managerVenda.homePage()}" update="@form"
+                            <p:commandButton style="border-radius: 50%" action="#{venda.navegacao(1)}" update="@form"
                                              icon="pi pi-times" styleClass="ui-button-danger" />
                         </p:toolbarGroup>
                     </div>
                     <p:toolbarGroup align="right">
                         <p:outputLabel id="labelPreco" style="padding: 5px 5px 5px 5px; background-color: #ff2f29; border-radius: 5px; color: #ffffff;
-                                       font-weight: 900" value="TOTAL: R$ #{managerVenda.precoLabel}"/>
+                                       font-weight: 900" value="TOTAL: R$ #{venda.precoTotalLabel}"/>
                     </p:toolbarGroup>
 
                     <p:toolbarGroup id="botoes2" align="right" style="gap: 10px">
                         <p:outputPanel id="panel-botao">
                             <p:commandButton style="border-radius: 16px" id="finalizar" process="@this" value="Finalizar"
                                              oncomplete="PF('confirmaVenda-dialog').show()"
-                                             disabled="#{!managerVenda.btFinalizar}"/>
+                                             disabled="#{!venda.btFinalizar}"/>
                         </p:outputPanel>
                     </p:toolbarGroup>
                 </p:toolbar>
@@ -45,31 +45,31 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                     <p:outputPanel id="confirmaVenda-content" class="ui-fluid">
                         <p:outputPanel>
                             <div>
-                                <p:outputLabel rendered="#{!managerVenda.formulario}" value="Informe o CPF do cliente:"/>
-                                <p:inputMask rendered="#{!managerVenda.formulario}" mask="999.999.999-99"
-                                             value="#{managerVenda.paciente.cpf}" />
+                                <p:outputLabel rendered="#{!venda.formulario}" value="Informe o CPF do cliente:"/>
+                                <p:inputMask rendered="#{!venda.formulario}" mask="999.999.999-99"
+                                             value="#{venda.paciente.cpf}" />
                             </div>
                             <div style="display: flex; flex-direction: column">
-                                <p:outputLabel rendered="#{managerVenda.formulario}" value="O Cliente não está cadastrado" />
-                                <p:outputLabel rendered="#{managerVenda.formulario}" value="Deseja Cadastra-lo?"/>
+                                <p:outputLabel rendered="#{venda.formulario}" value="O Cliente não está cadastrado" />
+                                <p:outputLabel rendered="#{venda.formulario}" value="Deseja Cadastra-lo?"/>
                             </div>
                         </p:outputPanel>
                     </p:outputPanel>
                     <f:facet name="footer">
                         <div>
-                            <p:commandButton rendered="#{managerVenda.formulario}" value="Sim"
+                            <p:commandButton rendered="#{venda.formulario}" value="Sim"
                                              immediate="true" oncomplete="PF('cliente-dialog').show()"
                                              update=":form:confirmaVenda-dialog"/>
-                            <p:commandButton rendered="#{managerVenda.formulario}" value="Voltar"
-                                             actionListener="#{managerVenda.setFormulario(false)}"
+                            <p:commandButton rendered="#{venda.formulario}" value="Voltar"
+                                             actionListener="#{venda.setFormulario(false)}"
                                              immediate="true" oncomplete="PF('confirmaVenda-dialog').show()"
                                              update=":form:confirmaVenda-dialog"/>
                             
-                            <p:commandButton rendered="#{!managerVenda.formulario}" value="Confirmar"
-                                             process="@this :form:confirmaVenda-content" actionListener="#{managerVenda.finalizaVenda()}"
+                            <p:commandButton rendered="#{!venda.formulario}" value="Confirmar"
+                                             process="@this :form:confirmaVenda-content" actionListener="#{venda.finalizarVenda()}"
                                              oncomplete="PF('confirmaVenda-dialog').hide()"
-                                             update=":form:msgs" action="#{managerVenda.homePage()}"/>
-                            <p:commandButton rendered="#{!managerVenda.formulario}" value="Voltar" 
+                                             update=":form:msgs" action="#{venda.navegacao(2)}"/>
+                            <p:commandButton rendered="#{!venda.formulario}" value="Voltar" 
                                              onclick="PF('confirmaVenda-dialog').hide()" />
                         </div>
                     </f:facet>
@@ -83,13 +83,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                         <p:outputPanel>
                             <div class="field">
                                 <p:outputLabel value="Nome"/>
-                                <p:inputText value="#{managerPaciente.paciente.nome}"/>
+                                <p:inputText value="#{venda.paciente.nome}"/>
 
                                 <p:outputLabel value="CPF"/>
-                                <p:inputMask value="#{managerPaciente.paciente.cpf}" mask="999.999.999-99" />
+                                <p:inputMask value="#{venda.paciente.cpf}" mask="999.999.999-99" />
 
                                 <p:outputLabel value="Telefone"/>
-                                <p:inputMask value="#{managerPaciente.paciente.telefone}" mask="(99)9 9999-9999" />
+                                <p:inputMask value="#{venda.paciente.telefone}" mask="(99)9 9999-9999" />
                             </div>
                         </p:outputPanel>
                     </p:outputPanel>
@@ -98,11 +98,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                             <p:commandButton value="Salvar" id="btSalvar" icon="pi pi-plus-circle" style="color: white; size: 30px" 
                                              styleClass="ui-button-success" process="@this :form:cliente-content"
                                              update=":form:msgs :form:cliente-content" oncomplete="PF('cliente-dialog').hide()"
-                                             actionListener="#{managerPaciente.salvarPaciente()}"/>
+                                             actionListener="#{venda.salvarPaciente()}"/>
 
                             <p:commandButton value="Voltar" id="btVoltar" icon="pi pi-times"
                                              styleClass="ui-button-sucess" process="@this" update=":form:cliente-dialog :form:confirmaVenda-dialog"
-                                             immediate="true" actionListener="#{managerVenda.setFormulario(false)}"
+                                             immediate="true" actionListener="#{venda.setFormulario(false)}"
                                              oncomplete="PF('confirmaVenda-dialog').show()"/>
                         </div>
                     </f:facet>
@@ -113,13 +113,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             <div class="card" style="margin-top: 15px; display: flex; gap: 10px">
                 <div style="width: 60%; background-color: #ffffff; padding: 10px 10px 10px 10px;
                      border-radius: 16px">
-                    <p:dataTable rowKey="#{produto.id}" id="productTable" value="#{managerVenda.produtosEstoque}" var="produto"
+                    <p:dataTable rowKey="#{produto.id}" id="productTable" value="#{venda.estoque}" var="produto"
                                   rows="5" paginator="true" paginatorPosition="both" currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} itens"
                                   paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                   rowsPerPageTemplate="5,10,{ShowAll|'Tudo'}">
-
-                        <p:ajax event="rowEdit" listener="#{managerProduto.onRowEdit}" update=":form:msgs"/>
-                        <p:ajax event="rowEditCancel" listener="#{managerProduto.onRowCancel}" update=":form:msgs"/>
 
                         <p:column width="30%" headerText="Nome">
                             <p:cellEditor>
@@ -178,7 +175,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
                         <p:column width="6%">
                             <p:commandButton style="border-radius: 50%" icon="pi pi-plus-circle" styleClass="ui-button-success" oncomplete="PF('quantidadeDialog').show()"
-                                             process="@this" actionListener="#{managerVenda.setProduto(produto)}">
+                                             process="@this" actionListener="#{venda.setProduto(produto)}">
                                 <p:ajax update=":form:quantidadeDialog" resetValues="true" process="@this" />
                             </p:commandButton>
                         </p:column>
@@ -191,13 +188,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                         <p:outputPanel>
                             <div class="field" style="display: flex; flex-direction: column; gap: 10px">
                                 <p:outputLabel for="quantity">Quantidade</p:outputLabel>
-                                <p:spinner required="true" id="quantity" thousandSeparator="." value="#{managerVenda.quantidade}" />
+                                <p:spinner required="true" id="quantity" thousandSeparator="." value="#{venda.quantidade}" />
                             </div>
                         </p:outputPanel>
                     </p:outputPanel>
                     <f:facet name="footer">
                         <div style="display: flex; justify-content: space-evenly">
-                            <p:commandButton value="Confirmar" process="@this :form:quantity" actionListener="#{managerVenda.adicionaProduto()}"
+                            <p:commandButton value="Confirmar" process="@this :form:quantity" actionListener="#{venda.adicionaProduto()}"
                                              update=":form:panel-botao :form:productBagTable :form:productTable :form:labelPreco :form:msgs" oncomplete="PF('quantidadeDialog').hide()"/>
                             <p:commandButton value="Cancelar" process="@this" onclick="PF('quantidadeDialog').hide()" />
                         </div>
@@ -206,7 +203,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
                 <div style="width: 40%; border: 1px solid gray; background-color: #ffffff; padding: 10px 10px 10px 10px;
                      border-radius: 16px">
-                    <p:dataTable rowKey="#{produtoBag.id}" id="productBagTable" value="#{managerVenda.produtosVenda}" var="produtoBag"
+                    <p:dataTable rowKey="#{produtoBag.id}" id="productBagTable" value="#{venda.venda}" var="produtoBag"
                                  rows="5" paginator="true"  paginatorPosition="both" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                  currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
                                  rowsPerPageTemplate="5,10,{ShowAll|'Tudo'}">

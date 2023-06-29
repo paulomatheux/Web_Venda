@@ -19,22 +19,20 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                            border-radius: 16px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); backdrop-filter: blur(6.2px);
                            -webkit-backdrop-filter: blur(6.2px); border: 0px">
                     <p:toolbarGroup style="gap: 10px">
-                        <p:commandButton style="border-radius: 50%" update="@form" action="#{managerVenda.homePage()}" icon="pi pi-home"
-                                         styleClass="mr-2" />
                     </p:toolbarGroup>
                     <p:toolbarGroup align="center">
                         <p:outputLabel style="color: #ffffff; font-size: 20px; font-weight: 600" value="ProjetoWeb" />
                     </p:toolbarGroup>
                     <p:toolbarGroup align="right" style="gap: 10px">
                         <p:menuButton buttonStyle="border-radius: 50%" icon="pi pi-user">
-                            <p:menuitem value="Perfil" url="http://localhost:8080/ProjetoWeb/profile.xhtml"/>
+                            <p:menuitem value="Perfil" action="#{interfaceHomepage.navegacao(1)}"/>
                             <p:menuitem value="Sair"/>
                         </p:menuButton>
 
                         <p:menuButton buttonStyle="border-radius: 50%" icon="pi pi-users">
                             <p:menuitem value="Pesquisar Cliente" oncomplete="PF('pesquisa-dialog').show()" icon="pi pi-users" styleClass="mr-2"/>
                             <p:menuitem value="Cadastrar Cliente" oncomplete="PF('cadastrar-cliente-dialog').show()"
-                                        actionListener="#{managerPaciente.novoPaciente()}" process="@this"
+                                        actionListener="#{interfaceHomepage.novoPaciente()}" process="@this"
                                         update=":form:msgs :form:cadastrar-cliente-dialog" 
                                         immediate="true" icon="pi pi-user-plus" styleClass="mr-2"/>
                         </p:menuButton>
@@ -46,8 +44,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                       widgetVar="pesquisa-dialog" responsive="true">
                 <p:outputPanel id="pesquisa-content" class="ui-fluid">
                     <div class="field">
-                        <p:outputLabel rendered="#{managerPaciente.trocarFormulario}">Digite o CPF do cliente: </p:outputLabel>
-                        <p:inputMask value="#{managerPaciente.paciente.cpf}" mask="999.999.999-99"/>
+                        <p:outputLabel value="Digite o CPF:" />
+                        <p:inputMask value="#{interfaceHomepage.paciente.cpf}" mask="999.999.999-99"/>
                     </div>
                 </p:outputPanel>
                 <f:facet name="footer" >
@@ -55,27 +53,27 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                         <p:commandButton value="Pesquisar" id="btPesquisar" style="color: white; size: 30px" icon="pi pi-search"
                                          styleClass="ui-button-success" process="@this form:pesquisa-content" update=":form:cadastrar-cliente-dialog"
                                          oncomplete="PF('cadastrar-cliente-dialog').show()"
-                                         actionListener="#{managerPaciente.pesquisarPaciente()}"/>
+                                         actionListener="#{interfaceHomepage.pesquisarPaciente()}"/>
                     </div>
                 </f:facet>
             </p:dialog>
 
             <p:dialog id="cadastrar-cliente-dialog" style="border-radius: 25px" header="Cadastrar Paciente" showEffect="fade" modal="true"
-                      widgetVar="cadastrar-cliente-dialog" responsive="true" onHide="#{managerPaciente.novoPaciente()}">
+                      widgetVar="cadastrar-cliente-dialog" responsive="true" onHide="#{interfaceHomepage.novoPaciente()}">
                 <p:outputPanel id="cliente-content" class="ui-fluid">
                     <p:outputPanel>
                         <div class="field">
                             <p:outputLabel value="Nome" />
-                            <p:inputText value="#{managerPaciente.paciente.nome}"/>
+                            <p:inputText value="#{interfaceHomepage.paciente.nome}"/>
 
                             <p:outputLabel value="CPF"/>
-                            <p:inputMask value="#{managerPaciente.paciente.cpf}" mask="999.999.999-99"/>
+                            <p:inputMask value="#{interfaceHomepage.paciente.cpf}" mask="999.999.999-99"/>
 
                             <p:outputLabel value="Telefone" />
-                            <p:inputMask value="#{managerPaciente.paciente.telefone}" mask="(99)9 9999-9999" />
+                            <p:inputMask value="#{interfaceHomepage.paciente.telefone}" mask="(99)9 9999-9999" />
 
                             <p:outputLabel value="Sexo"/>
-                            <p:selectOneMenu value="#{managerPaciente.paciente.sexo}" >
+                            <p:selectOneMenu value="#{interfaceHomepage.paciente.sexo}" >
                                 <f:selectItem itemLabel="Homem" itemValue="Homem" />
                                 <f:selectItem itemLabel="Mulher" itemValue="Mulher" />
                                 <f:selectItem itemLabel="Outro" itemValue="Outro" />
@@ -88,10 +86,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                         <p:commandButton value="Salvar" id="btSalvar"  style="color: white; size: 30px" icon="pi pi-plus-circle"
                                          styleClass="ui-button-success" process="@this :form:cliente-content"
                                          update=":form:msgs :form:pesquisa-dialog :form:cliente-content" 
-                                         actionListener="#{managerPaciente.salvarPaciente()}" oncomplete="PF('cadastrar-cliente-dialog').hide()"/>
+                                         actionListener="#{interfaceHomepage.editarPaciente()}" oncomplete="PF('cadastrar-cliente-dialog').hide()"/>
 
                         <p:commandButton value="Cancelar" style="color: white; size: 30px" icon="pi pi-times"
-                                         styleClass="ui-button-success" process="@this" update=":form:pesquisa-dialog" actionListener="#{managerPaciente.cancelar()}"
+                                         styleClass="ui-button-success" process="@this" update=":form:pesquisa-dialog"
                                          oncomplete="PF('cadastrar-cliente-dialog').hide()">
                         </p:commandButton>
                     </div>
@@ -100,24 +98,24 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
 
             <div id="dataTable" style="display: flex; margin-top: 15px; border-radius: 15px; gap: 15px">
                 <div style="width: 85%; padding: 10px 10px 10px 10px; border-radius: 16px; background-color: #ffffff">
-                    <p:dataTable rowKey="#{produto.id}" id="productTable" value="#{managerProduto.produtos}" var="produto" editable="true"
+                    <p:dataTable rowKey="#{produto.id}" id="productTable" value="#{interfaceHomepage.produtos}" var="produto" editable="true"
                                  paginator="true" rows="5" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                  currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
-                                 rowsPerPageTemplate="5,10,{ShowAll|'All'}">
+                                 rowsPerPageTemplate="5,10,{ShowAll|'All'}" lazy="false">
 
                         <f:facet name="header">
                             <div style="display: flex; justify-content: space-between; align-items: center" >
                                 <p:outputLabel value="Estoque" />
                                 <p:commandButton style="border-radius: 50%" oncomplete="PF('manageProductDialog').show()"
                                                  icon="pi pi-plus-circle" styleClass="ui-button-success"
-                                                 actionListener="#{managerProduto.novoProduto()}">
+                                                 actionListener="#{interfaceHomepage.novoProduto()}">
                                     <p:ajax update=":formsecundario:manageProductDialog" resetValues="true" />
                                 </p:commandButton>
                             </div>
                         </f:facet>
 
-                        <p:ajax event="rowEdit" listener="#{managerProduto.onRowEdit}" update=":form:msgs"/>
-                        <p:ajax event="rowEditCancel" listener="#{managerProduto.onRowCancel}" update=":form:msgs"/>
+                        <p:ajax event="rowEdit" listener="#{interfaceHomepage.onRowEdit}" update=":form:msgs"/>
+                        <p:ajax event="rowEditCancel" listener="#{interfaceHomepage.onRowCancel}" update=":form:msgs"/>
 
                         <p:column width="35%" headerText="Nome">
                             <p:cellEditor>
@@ -179,16 +177,17 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                         </p:column>
 
                         <p:column width="3%">
-                            <p:commandButton style="border-radius: 50%" id="salvarProduto" icon="pi pi-save" title="View" actionListener="#{managerProduto.editarProduto(produto)}" process="@this" update="productTable"
-                                             disabled="#{!managerProduto.editado}">
-                                <f:setPropertyActionListener value="#{produto}" target="#{managerProduto.produtoSelecionado}"/>
+                            <p:commandButton style="border-radius: 50%" id="salvarProduto" icon="pi pi-save" title="View"
+                                             actionListener="#{interfaceHomepage.editarProduto(produto)}"
+                                             process="@this" update="productTable"
+                                             disabled="#{!interfaceHomepage.editado}">
                             </p:commandButton>
                         </p:column>
 
                         <p:column width="3%">
                             <p:commandButton style="border-radius: 50%" icon="pi pi-trash" styleClass="ui-button-danger"
-                                             oncomplete="PF('deleteProductDialog').show()">
-                                <f:setPropertyActionListener value="#{produto}" target="#{managerProduto.produtoSelecionado}"/>
+                                             oncomplete="PF('deleteProductDialog').show()"
+                                             actionListener="#{interfaceHomepage.setProduto(produto)}">
                             </p:commandButton>
                         </p:column>
                     </p:dataTable>
@@ -200,33 +199,33 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
                     <div style="display: flex; flex-direction: column">
                         <div style="width: 100%">
                             <p:commandButton style="width: 100%; border-radius: 160px" value="Abrir Venda" update="@form" icon="pi pi-file"
-                                             action="#{managerProduto.abrirVenda()}" />
+                                             action="#{interfaceHomepage.navegacao(2)}" />
                         </div>
                         <div style="margin-top: 5px">
                             <p:commandButton style="width: 100%; border-radius: 160px" value="Historico de Venda" icon="pi pi-replay"
-                                             styleClass="mr-2" action="#{managerHistorico.historico()}" />
+                                             styleClass="mr-2" action="#{interfaceHomepage.navegacao(3)}" />
                         </div>
                     </div>
                 </p:card>
             </div>
 
             <p:dialog id="deleteProductDialog" style="border-radius: 25px" header="Excluir Produto" showEffect="fade" modal="true"
-                      widgetVar="deleteProductDialog" responsive="true">
+                      widgetVar="deleteProductDialog" responsive="true" onHide="#{interfaceHomepage.novoProduto()}">
                 <p:outputPanel id="delete-content" class="ui-fluid">
                     <p:outputPanel>
                         <div class="field">
-                            <p:outputLabel>Deseja deletar esse produto?</p:outputLabel>
+                            <p:outputLabel value="Deseja deletar esse produto?" />
                         </div>
                     </p:outputPanel>
                 </p:outputPanel>
 
                 <f:facet name="footer">
                     <div style="display: flex; gap: 10px">
-                        <p:commandButton id="confirmaDelet" value="Excluir" process="delete-content @this" update="delete-content" icon="pi pi-check"
-                                         styleClass="rounded-button ui-button-danger ui-button-flat" actionListener="#{managerProduto.deletarProduto()}"
-                                         oncomplete="PF('deleteProductDialog').hide()"/>
-                        <p:commandButton style="color: gray; size: 30px" id="cancelaDelet" value="Cancelar" process="@this" update="productTable" icon="pi pi-times"
-                                         styleClass="rounded-button ui-button-flat"
+                        <p:commandButton id="confirmaDelet" value="Excluir" process="delete-content @this" update="delete-content :form:productTable"
+                                         icon="pi pi-check" styleClass="rounded-button ui-button-danger ui-button-flat" 
+                                         actionListener="#{interfaceHomepage.deletarProduto()}" oncomplete="PF('deleteProductDialog').hide()"/>
+                        <p:commandButton style="color: gray; size: 30px" id="cancelaDelet" value="Cancelar" process="@this"
+                                         update="productTable" icon="pi pi-times" styleClass="rounded-button ui-button-flat"
                                          oncomplete="PF('deleteProductDialog').hide()"/>
                     </div>
                 </f:facet>
@@ -236,47 +235,47 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
         <h:form id="formsecundario">
             <div>
                 <p:dialog id="manageProductDialog" style="border-radius: 25px" header="Cadastrar Novo Produto" showEffect="fade" modal="true"
-                          widgetVar="manageProductDialog" responsive="true">
+                          widgetVar="manageProductDialog" responsive="true" onShow="#{interfaceHomepage.novoProduto()}">
                     <p:outputPanel id="manage-product-content" class="ui-fluid">
                         <p:outputPanel >
                             <div class="field">
-                                <p:outputLabel for="name">Nome</p:outputLabel>
-                                <p:inputText style="border-radius: 10px" id="name" value="#{managerProduto.produto.nome}"  required="true" />
+                                <p:outputLabel for="name" value="Nome"/>
+                                <p:inputText style="border-radius: 10px" id="name" value="#{interfaceHomepage.produto.nome}"  required="true" />
                             </div>
 
                             <div class="field">
-                                <p:outputLabel for="description">Descrição</p:outputLabel>
-                                <p:inputTextarea id="description" value="#{managerProduto.produto.descricao}" required="true"  />
+                                <p:outputLabel for="description" value="Descrição" />
+                                <p:inputTextarea id="description" value="#{interfaceHomepage.produto.descricao}" required="true"  />
                             </div>
 
                             <div class="formgrid grid">
                                 <div class="field col">
-                                    <p:outputLabel for="lote">Lote</p:outputLabel>
-                                    <p:inputText id="lote" value="#{managerProduto.produto.lote}" required="true"/>
+                                    <p:outputLabel for="lote" value="Lote" />
+                                    <p:inputText id="lote" value="#{interfaceHomepage.produto.lote}" required="true"/>
                                 </div>
 
                                 <div class="field col">
-                                    <p:outputLabel for="price">Preço</p:outputLabel>
-                                    <p:inputNumber minValue="1" id="price" value="#{managerProduto.produto.preco}"  symbol=" R$"
+                                    <p:outputLabel for="price" value="Preço"/>
+                                    <p:inputNumber minValue="1" id="price" value="#{interfaceHomepage.produto.preco}"  symbol=" R$"
                                                    symbolPosition="s" decimalSeparator="," thousandSeparator="." />
                                 </div>
 
                                 <div class="field col">
-                                    <p:outputLabel for="quantity">Quantidade</p:outputLabel>
-                                    <p:spinner id="quantity" value="#{managerProduto.produto.quantidade}" min="0"  />
+                                    <p:outputLabel for="quantity" value="Quantidade"/>
+                                    <p:spinner id="quantity" value="#{interfaceHomepage.produto.quantidade}" min="0"  />
                                 </div>
 
                                 <div class="field col">
-                                    <p:outputLabel for="expiration">Validade</p:outputLabel>
-                                    <p:datePicker id="expiration" value="#{managerProduto.produto.validade}" />
+                                    <p:outputLabel for="expiration" value="Validade"/>
+                                    <p:datePicker id="expiration" value="#{interfaceHomepage.produto.validade}" />
                                 </div>
                             </div>
                         </p:outputPanel>
                     </p:outputPanel>
 
                     <f:facet name="footer">
-                        <p:commandButton value="Salvar" icon="pi pi-check" actionListener="#{managerProduto.salvarProduto()}"
-                                         update=":form:productTable" process="manage-product-content @this"
+                        <p:commandButton value="Salvar" icon="pi pi-check" actionListener="#{interfaceHomepage.salvarProduto()}"
+                                         update=":form:productTable" process=":form:productTable manage-product-content @this"
                                          oncomplete="PF('manageProductDialog').hide()" >
                         </p:commandButton>
                         <p:commandButton value="Cancelar" icon="pi pi-times" onclick="PF('manageProductDialog').hide()"

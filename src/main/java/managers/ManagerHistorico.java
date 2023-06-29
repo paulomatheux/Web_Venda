@@ -7,10 +7,7 @@ package managers;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
+import javax.ejb.Stateless;
 import modelo.Paciente;
 import modelo.Produto;
 import modelo.Venda;
@@ -22,39 +19,21 @@ import servicos.ServicoVenda;
  *
  * @author paulo
  */
-@Named
-@ViewScoped
+@Stateless
 public class ManagerHistorico implements Serializable {
     
-    @EJB
-    private ServicoProduto servicoProduto;
-    @EJB
-    private ServicoVenda servicoVenda;
-    @EJB
-    private ServicoPaciente servicoPaciente;
-    
     private List<Produto> produtos;
-    private List<Venda> vendas;
     private Venda venda;
     private Paciente paciente;
     
-    @PostConstruct
-    public void init() {
-        vendas = servicoVenda.findAll();
-    }
-    
-    public void pesquisaVenda(Venda v) {
+    public void pesquisaVenda(ServicoVenda sVenda, ServicoProduto sProduto, ServicoPaciente sPaciente, Venda v) {
+        venda = sVenda.findVenda(v.getId());
         produtos = new ArrayList<>();
-        venda = servicoVenda.findVenda(v.getId());
         for (int i = 0; i < venda.getProdutos().size(); i++) {
-            produtos.add(servicoProduto.findProduct(venda.getProdutos().get(i).getId()));
+            produtos.add(sProduto.findProduct(venda.getProdutos().get(i).getId()));
         }
-        paciente = servicoPaciente.findByCpf(venda.getPaciente().getCpf());
+        paciente = sPaciente.findByCpf(venda.getPaciente().getCpf());
         System.out.println(paciente.getNome());
-    }
-    
-    public String historico() {
-        return "historico?faces-redirect=true";
     }
     
     public List<Produto> getProdutos() {
@@ -72,39 +51,7 @@ public class ManagerHistorico implements Serializable {
     public void setVenda(Venda venda) {
         this.venda = venda;
     }
-    
-    public ServicoProduto getServicoProduto() {
-        return servicoProduto;
-    }
-    
-    public void setServicoProduto(ServicoProduto servicoProduto) {
-        this.servicoProduto = servicoProduto;
-    }
-    
-    public ServicoVenda getServicoVenda() {
-        return servicoVenda;
-    }
 
-    public ServicoPaciente getServicoPaciente() {
-        return servicoPaciente;
-    }
-
-    public void setServicoPaciente(ServicoPaciente servicoPaciente) {
-        this.servicoPaciente = servicoPaciente;
-    }
-
-    public List<Venda> getVendas() {
-        return vendas;
-    }
-
-    public void setVendas(List<Venda> vendas) {
-        this.vendas = vendas;
-    }
-    
-    public void setServicoVenda(ServicoVenda servicoVenda) {
-        this.servicoVenda = servicoVenda;
-    }
-    
     public Paciente getPaciente() {
         return paciente;
     }

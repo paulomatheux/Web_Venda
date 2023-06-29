@@ -5,13 +5,7 @@
 package managers;
 
 import java.io.Serializable;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
+import javax.ejb.Stateless;
 import modelo.Paciente;
 import servicos.ServicoPaciente;
 
@@ -19,107 +13,33 @@ import servicos.ServicoPaciente;
  *
  * @author paulo
  */
-@Named
-@ViewScoped
+@Stateless
 public class ManagerPaciente implements Serializable {
 
-    @EJB
-    private ServicoPaciente servico;
-    private Paciente paciente;
-    private List<Paciente> pacientes;
-    private boolean trocarFormulario = true;
-    private String headerText = "Pesquisar Cliente";
-
-    @PostConstruct
-    public void init() {
-        paciente = new Paciente();
-        populaTabela();
-    }
-
-    public void populaTabela() {
-        pacientes = servico.findAll();
-    }
-
-    public void salvarPaciente() {
+    public boolean salvarPaciente(ServicoPaciente servico, Paciente paciente) {
         if (servico.findByCpf(paciente.getCpf()) != null) {
-            System.out.println("Este paciente já existe!");
+            return false;
         } else {
             servico.salvar(paciente);
-            paciente = new Paciente();
-            populaTabela();
-            message("Cadastro realizado com Sucesso!", "Paciente cadastrado com sucesso!");
+            return true;
         }
     }
 
-    public void message(String titulo, String detalhes) {
-        FacesMessage msg = new FacesMessage(titulo, detalhes);
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-    }
-
-    public void novoPaciente() {
-        paciente = new Paciente();
-    }
-    
-    public void pesquisarPaciente() {
-        Paciente tmp = servico.findByCpf(paciente.getCpf());
-        if (tmp != null) {
-            paciente = tmp;
-            trocarFormulario = !trocarFormulario;
+    public void editarPaciente(ServicoPaciente servico, Paciente paciente) {
+        Paciente pacienteClone = servico.findByCpf(paciente.getCpf());
+        if(pacienteClone != null) {
+            servico.atualizar(paciente);
+        } else {
+            System.out.println("Verifique o paciente que está tentando editar");
         }
     }
-    
-    public void cancelar() {
-        paciente = new Paciente();
-        trocarFormulario = !trocarFormulario;
+
+    public Paciente pesquisarPaciente(ServicoPaciente servico, Paciente paciente) {
+        return servico.findByCpf(paciente.getCpf());
     }
 
-    public String perfil() {
-        return "profile?faces-redirect=true";
-    }
-
-    public void deletarPaciente(Paciente paciente) {
+    public void deletarPaciente(ServicoPaciente servico, Paciente paciente) {
         servico.deletarPaciente(paciente);
-        populaTabela();
-    }
-
-    public ServicoPaciente getServico() {
-        return servico;
-    }
-
-    public void setServico(ServicoPaciente servico) {
-        this.servico = servico;
-    }
-
-    public Paciente getPaciente() {
-        return paciente;
-    }
-
-    public boolean isTrocarFormulario() {
-        return trocarFormulario;
-    }
-
-    public void setTrocarFormulario(boolean trocarFormulario) {
-        this.trocarFormulario = trocarFormulario;
-    }
-
-    public void setPaciente(Paciente paciente) {
-        this.paciente = paciente;
-    }
-
-    public List<Paciente> getPacientes() {
-        return pacientes;
-    }
-
-    public String getHeaderText() {
-        return headerText;
-    }
-
-    public void setHeaderText(String headerText) {
-        this.headerText = headerText;
-    }
-
-    public void setPacientes(List<Paciente> pacientes) {
-        this.pacientes = pacientes;
     }
 
 }
