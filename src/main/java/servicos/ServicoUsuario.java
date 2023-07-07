@@ -22,6 +22,10 @@ public class ServicoUsuario extends ServicoGenerico<Usuario> {
         }
     }
 
+    public Usuario findByObject(Usuario usuario) {
+        return getEm().find(Usuario.class, this).getUsuario();
+    }
+
     public void deletarUsuario(Usuario usuario) {
         Object id = usuario.getId();
         Usuario user = getEm().getReference(Usuario.class, id);

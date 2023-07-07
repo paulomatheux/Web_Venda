@@ -97,99 +97,88 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit t
             </p:dialog>
 
             <div id="dataTable" style="display: flex; margin-top: 15px; border-radius: 15px; gap: 15px">
-                <div style="width: 85%; padding: 10px 10px 10px 10px; border-radius: 16px; background-color: #ffffff">
-                    <p:dataTable rowKey="#{produto.id}" id="productTable" value="#{interfaceHomepage.produtos}" var="produto" editable="true"
-                                 paginator="true" rows="5" paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                <div style="width: 100%; padding: 10px 10px 10px 10px; border-radius: 16px; background-color: #ffffff">
+
+                    <p:dataTable widgetVar="productTableWidget" rowKey="#{produto.id}" id="productTable" value="#{filter.produtos}"
+                                 var="produto" editable="true" paginator="true" rows="5" paginatorPosition="bottom"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks}
+                                 {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                                  currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records"
-                                 rowsPerPageTemplate="5,10,{ShowAll|'All'}" lazy="false">
+                                 rowsPerPageTemplate="5,10,{ShowAll|'All'}" lazy="false"
+                                 reflow="true" rowSelectMode="add">
+
 
                         <f:facet name="header">
-                            <div style="display: flex; justify-content: space-between; align-items: center" >
-                                <p:outputLabel value="Estoque" />
-                                <p:commandButton style="border-radius: 50%" oncomplete="PF('manageProductDialog').show()"
-                                                 icon="pi pi-plus-circle" styleClass="ui-button-success"
-                                                 actionListener="#{interfaceHomepage.novoProduto()}">
-                                    <p:ajax update=":formsecundario:manageProductDialog" resetValues="true" />
-                                </p:commandButton>
-                            </div>
+                            <!--                            <div style="display: flex; justify-content: space-between; align-items: center" >
+                                                            <p:outputLabel value="Estoque" />
+                                                            <div style="display: flex; gap: 5px">
+                                                                <p:commandButton style="border-radius: 50%" oncomplete="PF('manageProductDialog').show()"
+                                                                                 icon="pi pi-plus-circle" styleClass="ui-button-success"
+                                                                                 actionListener="#interfaceHomepage.novoProduto()}">
+                                                                    <p:ajax update=":formsecundario:manageProductDialog" resetValues="true" />
+                                                                </p:commandButton>
+                                                                <p:commandButton style="border-radius: 160px" id="toggler" type="button"
+                                                                                 icon="pi pi-align-justify"/>
+                                                                <p:columnToggler datasource="productTable" trigger="toggler">
+                                                                    <p:ajax />
+                                                                </p:columnToggler>
+                                                                <p:commandButton value="Export" icon="pi pi-upload" styleClass="ui-button-help" ajax="false">
+                                                                    <p:dataExporter type="pdf" target="productTable" fileName="estoque" 
+                                                                                    preProcessor="#filter.preProcessPDF}"/>
+                                                                </p:commandButton>
+                                                            </div>
+                                                        </div>
+                                                        <div style="display: flex; justify-content: space-around; align-items: center; width: 100%">
+                                                            <p:inputText id="globalFilter" style="border-radius: 160px; width: 50%" placeholder="Pesquisar Produto"
+                                                                         onkeyup="PF('productTableWidget').filter()"/>
+                                                        </div>-->
+                            <p:commandButton value="Export" ajax="false" icon="pi pi-file-pdf">
+                                <p:dataExporter type="pdf" target="productTable" fileName="table" 
+                                                preProcessor="#{filter.preProcessExport}" />
+                            </p:commandButton>
+                            <p:columnToggler datasource="productTable" trigger="togglerButton" >
+                                <p:ajax event="toggle" listener="#{filter.onToggle}" />
+                            </p:columnToggler>
+                            <p:commandButton id="togglerButton"/>
                         </f:facet>
 
-                        <p:ajax event="rowEdit" listener="#{interfaceHomepage.onRowEdit}" update=":form:msgs"/>
-                        <p:ajax event="rowEditCancel" listener="#{interfaceHomepage.onRowCancel}" update=":form:msgs"/>
-
-                        <p:column width="35%" headerText="Nome">
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    <h:outputText value="#{produto.nome}"/>
-                                </f:facet>
-                                <f:facet name="input">
-                                    <p:inputText id="modelInputNome" value="#{produto.nome}" style="width: 100%"/>
-                                </f:facet>
-                            </p:cellEditor>
+                        <p:column headerText="Nome" rendered="#{filter.selectedColumns.contains('nome')}">
+                            <h:outputText value="#{produto.nome}" />
+                        </p:column>
+                        <p:column headerText="Lote" rendered="#{filter.selectedColumns.contains('lote')}">
+                            <h:outputText value="#{produto.lote}" />
+                        </p:column>
+                        <p:column headerText="Quantidade" rendered="#{filter.selectedColumns.contains('quantidade')}">
+                            <h:outputText value="#{produto.quantidade}" />
+                        </p:column>
+                        <p:column headerText="Preço" rendered="#{filter.selectedColumns.contains('preco')}">
+                            <h:outputText value="#{produto.preco}" />
+                        </p:column>
+                        <p:column headerText="Validade" rendered="#{filter.selectedColumns.contains('validade')}">
+                            <h:outputText value="#{produto.validade}" />
                         </p:column>
 
-                        <p:column width="5%" headerText="Lote">
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    <h:outputText value="#{produto.lote}"/>
-                                </f:facet>
-                                <f:facet name="input">
-                                    <p:inputText id="modelInputLote" value="#{produto.lote}" style="width: 100%"/>
-                                </f:facet>
-                            </p:cellEditor>
+                        <p:column toggleable="false" width="3%">
+                            <p:rowEditor style="background-color: #b9b9b9; border-radius: 50%" editTitle="Editar Produto" cancelTitle="Cancelar Edição" saveTitle="Salvar Edição"/>
                         </p:column>
 
-                        <p:column headerText="Quantidade">
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    <h:outputText value="#{produto.quantidade} UN"/>
-                                </f:facet>
-                                <f:facet name="input">
-                                    <p:inputText id="modelInputQuantidade" value="#{produto.quantidade}" style="width: 100%"/>
-                                </f:facet>
-                            </p:cellEditor>
-                        </p:column>
-
-                        <p:column headerText="Preço">
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    <h:outputText value="R$ #{produto.preco}"/>
-                                </f:facet>
-                                <f:facet name="input">
-                                    <p:inputText id="modelInputPreco" value="#{produto.preco}" style="width: 100%"/>
-                                </f:facet>
-                            </p:cellEditor>
-                        </p:column>
-
-                        <p:column headerText="Validade">
-                            <p:cellEditor>
-                                <f:facet name="output">
-                                    <h:outputText value="#{produto.validade}"/>
-                                </f:facet>
-                                <f:facet name="input">
-                                    <p:inputText id="modelInputValidade" value="#{produto.validade}" style="width: 100%"/>
-                                </f:facet>
-                            </p:cellEditor>
-                        </p:column>
-
-                        <p:column width="3%">
-                            <p:rowEditor editTitle="Editar Produto" cancelTitle="Cancelar Edição" saveTitle="Salvar Edição"/>
-                        </p:column>
-
-                        <p:column width="3%">
+                        <p:column toggleable="false" width="3%">
                             <p:commandButton style="border-radius: 50%" id="salvarProduto" icon="pi pi-save" title="View"
                                              actionListener="#{interfaceHomepage.editarProduto(produto)}"
                                              process="@this" update="productTable"
-                                             disabled="#{!interfaceHomepage.editado}">
+                                             disabled="#{!interfaceHomepage.isEditado(produto.id)}">
                             </p:commandButton>
                         </p:column>
 
-                        <p:column width="3%">
+                        <p:column toggleable="false" width="2%">
                             <p:commandButton style="border-radius: 50%" icon="pi pi-trash" styleClass="ui-button-danger"
                                              oncomplete="PF('deleteProductDialog').show()"
                                              actionListener="#{interfaceHomepage.setProduto(produto)}">
                             </p:commandButton>
                         </p:column>
+
+                        <p:ajax event="rowEdit" listener="#{interfaceHomepage.onRowEdit}" update=":form:msgs"/>
+                        <p:ajax event="rowEditCancel" listener="#{interfaceHomepage.onRowCancel}" update=":form:msgs"/>
                     </p:dataTable>
                 </div>
 

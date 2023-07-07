@@ -5,8 +5,6 @@
 package managers;
 
 import java.io.Serializable;
-import java.util.List;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import modelo.Produto;
 import servicos.ServicoProduto;
@@ -26,13 +24,17 @@ public class ManagerProduto implements Serializable {
         }
     }
 
-    public void editarProduto(ServicoProduto servico, Produto produto) {
+    public boolean editarProduto(ServicoProduto servico, Produto produto) {
         Produto produtoSelecionado = servico.findProduct(produto.getId());
         if (produtoSelecionado != null) {
-            servico.atualizar(produto);
-        } else {
-            System.out.println("Verifique o produto que está tentando editar");
+            try {
+                servico.atualizar(produto);
+                return true;
+            } catch (Exception ex) {
+                return false;
+            }
         }
+        return false;
     }
 
     public void deletarProduto(ServicoProduto servico, Produto produto) {

@@ -5,110 +5,35 @@
 package managers;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
+import javax.ejb.Stateless;
 import modelo.Usuario;
-import org.primefaces.event.RowEditEvent;
 import servicos.ServicoUsuario;
 
 /**
  *
  * @author paulo
  */
-@Named
-@ViewScoped
+@Stateless
 public class ManagerUsuario implements Serializable {
 
-    @EJB
-    private ServicoUsuario servico;
-    private Usuario usuario;
-    private boolean exibirFormulario = false;
-    private List<Usuario> usuarios;
-    
-    @PostConstruct
-    public void init() {
-        usuario = new Usuario();
-        populaTabela();
+    public void salvarUsuario(ServicoUsuario servico, Usuario usuario) {
+        servico.salvar(usuario);
     }
 
-    public void populaTabela() {
-        usuarios = servico.findAll();
-    }
-
-    public void salvarUsuario() {
-        if (servico.findByUsername(usuario.getNome()) != null) {
-            System.out.println("Este usuário já existe!");
-        } else {
-            servico.salvar(usuario);
-            usuario = new Usuario();
-            populaTabela();
-            mostrarFormulario();
-        }
-    }
-
-    public String pesquisarUsuario() {
-        Usuario tmp = servico.findByUsername(usuario.getNome());
-        if (tmp != null && usuario.getSenha().equals(tmp.getSenha())) {
-            usuarios = new ArrayList<>();
-            usuarios.add(tmp);
-            return "homepage?faces-redirect=true";
+    public Usuario pesquisarUsuario(ServicoUsuario servico, String username) {
+        Usuario tmp = servico.findByUsername(username);
+        if (tmp != null) {
+            return tmp;
         }
         return null;
     }
 
-    public String perfil() {
-        return "profile?faces-redirect=true";
+    public boolean pesquisarUsuario(ServicoUsuario servico, Usuario usuario) {
+        Usuario tmp = servico.findByObject(usuario);
+        return tmp != null;
     }
 
-    public void deletarUsuario(Usuario usuario) {
+    public void deletarUsuario(ServicoUsuario servico, Usuario usuario) {
         servico.deletarUsuario(usuario);
-        populaTabela();
     }
-
-    public void mostrarFormulario() {
-        exibirFormulario = !exibirFormulario;
-    }
-
-    public boolean isExibirFormulario() {
-        return exibirFormulario;
-    }
-
-    public void setExibirFormulario(boolean exibirFormulario) {
-        this.exibirFormulario = exibirFormulario;
-    }
-
-    public List<Usuario> retornaUsuarios() {
-        return usuarios = servico.findAll();
-    }
-
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public ServicoUsuario getServico() {
-        return servico;
-    }
-
-    public void setServico(ServicoUsuario servico) {
-        this.servico = servico;
-    }
-
 }

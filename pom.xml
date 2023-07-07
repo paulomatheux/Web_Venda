@@ -25,9 +25,22 @@
         </dependency>
         
         <dependency>
+            <groupId>fish.payara.extras</groupId>
+            <artifactId>payara-micro</artifactId>
+            <version>5.2022.5</version>
+            <scope>provided</scope>
+        </dependency>
+
+        
+        <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.faces</artifactId>
             <version>2.3.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
         </dependency>
 
         <dependency>
@@ -38,10 +51,10 @@
         </dependency>
         
         <dependency>
-            <groupId>com.itextpdf</groupId> 
-            <artifactId>itextpdf</artifactId>
-            <version>5.5.13.1</version>
-            <type>jar</type>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itext7-core</artifactId>
+            <version>8.0.0</version>
+            <type>pom</type>
         </dependency>
         
         <dependency>
@@ -73,6 +86,11 @@
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>fish.payara.maven.plugins</groupId>
+                <artifactId>payara-micro-maven-plugin</artifactId>
+                <version>2.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

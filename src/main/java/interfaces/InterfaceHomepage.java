@@ -5,7 +5,9 @@
 package interfaces;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -38,8 +40,9 @@ public class InterfaceHomepage implements Serializable {
     private ServicoPaciente sPaciente;
     private Produto produto;
     private List<Produto> produtos;
-    private boolean editado = false, formulario = true;
+    private boolean formulario = true;
     private Paciente paciente;
+    private Map<Long, Boolean> editadoMap = new HashMap<>();
 
     @PostConstruct
     public void init() {
@@ -61,8 +64,8 @@ public class InterfaceHomepage implements Serializable {
     }
 
     public void editarProduto(Produto produto) {
-        managerProduto.editarProduto(servicoProduto, produto);
-        editado = false;
+        if (managerProduto.editarProduto(servicoProduto, produto)) {
+        }
     }
 
     public void deletarProduto() {
@@ -87,9 +90,9 @@ public class InterfaceHomepage implements Serializable {
     }
 
     public void deletarPaciente() {
-        
+
     }
-    
+
     public void pesquisarPaciente() {
         paciente = mPaciente.pesquisarPaciente(sPaciente, paciente);
         if (paciente == null) {
@@ -103,9 +106,10 @@ public class InterfaceHomepage implements Serializable {
     }
 
     public void onRowEdit(RowEditEvent<Produto> event) {
-        FacesMessage msg = new FacesMessage("Produto alterado", String.valueOf(event.getObject().getNome()));
+        Produto produto = (Produto) event.getObject();
+        FacesMessage msg = new FacesMessage("Produto alterado", produto.getNome());
         FacesContext.getCurrentInstance().addMessage(null, msg);
-        editado = true;
+        setEditado(produto.getId(), true);
     }
 
     public void onRowCancel(RowEditEvent<Produto> event) {
@@ -124,6 +128,30 @@ public class InterfaceHomepage implements Serializable {
             default:
                 return "";
         }
+    }
+
+    public ManagerPaciente getmPaciente() {
+        return mPaciente;
+    }
+
+    public void setmPaciente(ManagerPaciente mPaciente) {
+        this.mPaciente = mPaciente;
+    }
+
+    public ServicoPaciente getsPaciente() {
+        return sPaciente;
+    }
+
+    public void setsPaciente(ServicoPaciente sPaciente) {
+        this.sPaciente = sPaciente;
+    }
+
+    public Map<Long, Boolean> getEditadoMap() {
+        return editadoMap;
+    }
+
+    public void setEditadoMap(Map<Long, Boolean> editadoMap) {
+        this.editadoMap = editadoMap;
     }
 
     public boolean isFormulario() {
@@ -154,12 +182,12 @@ public class InterfaceHomepage implements Serializable {
         return servicoProduto;
     }
 
-    public boolean isEditado() {
-        return editado;
+    public boolean isEditado(Long id) {
+        return editadoMap.getOrDefault(id, false);
     }
 
-    public void setEditado(boolean editado) {
-        this.editado = editado;
+    public void setEditado(Long id, boolean editado) {
+        this.editadoMap.put(id, editado);
     }
 
     public void setServicoProduto(ServicoProduto servicoProduto) {
